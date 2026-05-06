@@ -136,3 +136,12 @@
 **Context**: User approved functional design for all 3 units. Proceeding to Code Generation.
 
 ---
+
+## 비즈니스 규칙 수정 - 메뉴 가격
+**Timestamp**: 2026-05-06T00:20:00Z
+**변경 내용**: BR-MENU-01 price 검증 `100 이상` → `0 이상` (무료 메뉴 허용)
+**영향 범위**: Unit 1 (server) 검증 로직만 변경, API 인터페이스 변경 없음
+**팀 공유**: Unit 3 (client-admin) 담당자에게 메뉴 등록 폼 최소값 0으로 변경 공유 완료
+**검증 체크**: Build and Test 단계에서 Unit 3 프론트 검증 규칙 일치 여부 확인 필요
+
+---
