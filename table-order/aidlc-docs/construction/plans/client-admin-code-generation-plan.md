@@ -10,15 +10,15 @@
 
 ## 생성 단계
 
-- [ ] Step 1: 프로젝트 초기화 (package.json, vite.config.ts, tsconfig.json, index.html)
-- [ ] Step 2: API 클라이언트 (src/api/client.ts)
-- [ ] Step 3: Hooks (src/hooks/useAuth.ts, src/hooks/useSSE.ts)
-- [ ] Step 4: 공통 컴포넌트 (TableCard, OrderDetail, MenuForm)
-- [ ] Step 5: LoginPage
-- [ ] Step 6: DashboardPage
-- [ ] Step 7: TableDetailPage
-- [ ] Step 8: MenuManagePage
-- [ ] Step 9: App.tsx + main.tsx + 글로벌 스타일
+- [x] Step 1: 프로젝트 초기화 (package.json, vite.config.ts, tsconfig.json, index.html)
+- [x] Step 2: API 클라이언트 (src/api/client.ts)
+- [x] Step 3: Hooks (src/hooks/useAuth.ts, src/hooks/useSSE.ts)
+- [x] Step 4: 공통 컴포넌트 (TableCard, OrderDetail, MenuForm)
+- [x] Step 5: LoginPage
+- [x] Step 6: DashboardPage
+- [x] Step 7: TableDetailPage
+- [x] Step 8: MenuManagePage
+- [x] Step 9: App.tsx + main.tsx + 글로벌 스타일
 
 ---
 

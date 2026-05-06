@@ -29,5 +29,5 @@
 - [x] INCEPTION - Application Design
 - [x] INCEPTION - Units Generation
 - [x] CONSTRUCTION - Functional Design
-- [ ] CONSTRUCTION - Code Generation
+- [x] CONSTRUCTION - Code Generation (Unit 3: client-admin)
 - [ ] CONSTRUCTION - Build and Test
