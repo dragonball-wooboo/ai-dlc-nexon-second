@@ -137,18 +137,11 @@
 
 ---
 
-## Code Generation - Plan Approval
-**Timestamp**: 2026-05-06T00:16:00Z
-**User Input**: "승인 후 다음 진행"
-**AI Response**: "Code Generation 플랜 승인 완료. Unit 1 (server) 코드 생성 시작."
-**Context**: All 3 code generation plans approved. Starting code generation for Unit 1 (server).
-
----
-
-## Code Generation - Unit 2 (client-customer) Complete
-**Timestamp**: 2026-05-06T00:17:00Z
-**User Input**: "컨스트럭션 페이즈에서 Unit 2: client-customer 만 컨스트럭션 해줘"
-**AI Response**: "Unit 2 (client-customer) 코드 생성 완료. 10개 Step 모두 완료."
-**Context**: All 10 steps completed for client-customer. Files created: package.json, vite.config.ts, tsconfig.json, index.html, api/client.ts, hooks/useAuth.ts, hooks/useCart.ts, components/MenuCard.tsx, components/CartItem.tsx, components/CategoryNav.tsx, pages/LoginPage.tsx, pages/MenuPage.tsx, pages/CartPage.tsx, pages/OrderPage.tsx, pages/OrderHistoryPage.tsx, App.tsx, main.tsx, styles.css.
+## 비즈니스 규칙 수정 - 메뉴 가격
+**Timestamp**: 2026-05-06T00:20:00Z
+**변경 내용**: BR-MENU-01 price 검증 `100 이상` → `0 이상` (무료 메뉴 허용)
+**영향 범위**: Unit 1 (server) 검증 로직만 변경, API 인터페이스 변경 없음
+**팀 공유**: Unit 3 (client-admin) 담당자에게 메뉴 등록 폼 최소값 0으로 변경 공유 완료
+**검증 체크**: Build and Test 단계에서 Unit 3 프론트 검증 규칙 일치 여부 확인 필요
 
 ---
