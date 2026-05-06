@@ -50,9 +50,9 @@ export const api = {
     });
   },
 
-  // Orders — 서버는 배열 직접 반환
-  getOrders(sessionId: string) {
-    return request<Order[]>(`/orders?sessionId=${sessionId}`);
+  // Orders — 서버는 JWT의 tableId로 현재 세션 주문을 자동 조회
+  getOrders() {
+    return request<Order[]>('/orders');
   },
 };
 

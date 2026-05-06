@@ -7,6 +7,7 @@ import { useCart } from '../hooks/useCart';
 export function OrderPage() {
   const { items, totalAmount, clearCart } = useCart();
   const { storeId, tableId } = useAuth();
+  const { updateSessionId } = useAuth();
   const navigate = useNavigate();
   const [orderResult, setOrderResult] = useState<{ id: number } | null>(null);
   const [error, setError] = useState('');
@@ -42,6 +43,10 @@ export function OrderPage() {
           price: item.price,
         }))
       );
+      // 서버가 생성한 sessionId를 auth에 반영
+      if (result.session_id) {
+        updateSessionId(result.session_id);
+      }
       setOrderResult({ id: result.id });
       clearCart();
     } catch (err) {

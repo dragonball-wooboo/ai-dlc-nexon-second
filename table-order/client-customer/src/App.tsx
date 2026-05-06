@@ -1,6 +1,5 @@
-import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from './hooks/useAuth';
+import { useAuth, AuthProvider } from './hooks/useAuth';
 import { LoginPage } from './pages/LoginPage';
 import { MenuPage } from './pages/MenuPage';
 import { CartPage } from './pages/CartPage';
@@ -44,10 +43,12 @@ function BottomNav() {
 export default function App() {
   return (
     <BrowserRouter>
-      <div className="app-container">
-        <AppRoutes />
-        <BottomNav />
-      </div>
+      <AuthProvider>
+        <div className="app-container">
+          <AppRoutes />
+          <BottomNav />
+        </div>
+      </AuthProvider>
     </BrowserRouter>
   );
 }

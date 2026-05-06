@@ -1,11 +1,19 @@
-import { useState, useEffect, useCallback } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { api } from '../api/client';
+import React from 'react';
 
 interface AuthState {
   token: string | null;
   tableId: number | null;
   sessionId: string | null;
   storeId: string | null;
+}
+
+interface AuthContextType extends AuthState {
+  isLoggedIn: boolean;
+  login: (storeId: string, tableNumber: number, password: string) => Promise<boolean>;
+  logout: () => void;
+  updateSessionId: (sessionId: string) => void;
 }
 
 const STORAGE_KEY = 'table-order-auth';
@@ -20,7 +28,9 @@ function loadAuth(): AuthState {
   }
 }
 
-export function useAuth() {
+const AuthContext = createContext<AuthContextType | null>(null);
+
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [auth, setAuth] = useState<AuthState>(loadAuth);
 
   useEffect(() => {
@@ -50,10 +60,25 @@ export function useAuth() {
     setAuth({ token: null, tableId: null, sessionId: null, storeId: null });
   }, []);
 
-  return {
+  const updateSessionId = useCallback((newSessionId: string) => {
+    setAuth(prev => ({ ...prev, sessionId: newSessionId }));
+  }, []);
+
+  const value: AuthContextType = {
     ...auth,
     isLoggedIn: !!auth.token,
     login,
     logout,
+    updateSessionId,
   };
+
+  return React.createElement(AuthContext.Provider, { value }, children);
+}
+
+export function useAuth(): AuthContextType {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within AuthProvider');
+  }
+  return context;
 }

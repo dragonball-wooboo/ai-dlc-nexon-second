@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
+import { initDb } from './db/database';
 import { initializeSchema } from './db/schema';
 import { errorHandler } from './middleware/error';
 import authRoutes from './routes/auth';
@@ -23,9 +24,6 @@ app.use(express.json({ limit: '1mb' }));
 // 정적 파일 서빙 (업로드된 이미지)
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-// DB 초기화
-initializeSchema();
-
 // 라우트
 app.use('/api/auth', authRoutes);
 app.use('/api/menus', menuRoutes);
@@ -42,9 +40,19 @@ app.get('/health', (req, res) => {
 // 에러 핸들러 (마지막에 등록)
 app.use(errorHandler);
 
-// 서버 시작
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+// 서버 시작 (DB 초기화 후)
+async function start() {
+  await initDb();
+  initializeSchema();
+  
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+}
+
+start().catch(err => {
+  console.error('Failed to start server:', err);
+  process.exit(1);
 });
 
 export default app;

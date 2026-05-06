@@ -19,7 +19,7 @@ router.post('/', authenticateToken, requireTable, (req: Request, res: Response, 
 
     // 항목 검증
     for (const item of items) {
-      if (!item.menuId || !item.menuName || !item.quantity || !item.price) {
+      if (item.menuId === undefined || item.menuId === null || !item.menuName || !item.quantity || item.price === undefined || item.price === null) {
         throw new ValidationError('각 항목에 menuId, menuName, quantity, price가 필요합니다');
       }
       if (item.quantity < 1 || item.quantity > 99) {
@@ -79,21 +79,24 @@ router.post('/', authenticateToken, requireTable, (req: Request, res: Response, 
   }
 });
 
-// GET /api/orders?sessionId=xxx — 현재 세션 주문 조회 (테이블)
+// GET /api/orders — 현재 테이블의 주문 조회 (테이블)
 router.get('/', authenticateToken, requireTable, (req: Request, res: Response, next) => {
   try {
     const user = req.user as TablePayload;
-    const sessionId = req.query.sessionId as string || user.sessionId;
 
-    if (!sessionId) {
+    const db = getDb();
+
+    // 테이블의 현재 세션ID를 DB에서 직접 조회
+    const table = db.prepare('SELECT current_session_id FROM tables WHERE id = ?').get(user.tableId) as any;
+
+    if (!table || !table.current_session_id) {
       res.json([]);
       return;
     }
 
-    const db = getDb();
     const orders = db.prepare(
       'SELECT * FROM orders WHERE session_id = ? ORDER BY created_at ASC'
-    ).all(sessionId) as any[];
+    ).all(table.current_session_id) as any[];
 
     // 각 주문에 항목 추가
     const ordersWithItems = orders.map(order => {

@@ -1,20 +1,16 @@
 import { useEffect, useState } from 'react';
 import { api, Order } from '../api/client';
-import { useAuth } from '../hooks/useAuth';
 
 export function OrderHistoryPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
-  const { sessionId } = useAuth();
 
   useEffect(() => {
-    if (!sessionId) return;
-    setLoading(true);
-    api.getOrders(sessionId)
+    api.getOrders()
       .then(data => setOrders(data))
       .catch(console.error)
       .finally(() => setLoading(false));
-  }, [sessionId]);
+  }, []);
 
   const statusLabel = (status: string) => {
     switch (status) {
