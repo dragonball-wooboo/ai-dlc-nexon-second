@@ -10,16 +10,16 @@
 
 ## 생성 단계
 
-- [ ] Step 1: 프로젝트 초기화 (package.json, vite.config.ts, tsconfig.json, index.html)
-- [ ] Step 2: API 클라이언트 (src/api/client.ts)
-- [ ] Step 3: Hooks (src/hooks/useAuth.ts, src/hooks/useCart.ts)
-- [ ] Step 4: 공통 컴포넌트 (CategoryNav, MenuCard, CartItem)
-- [ ] Step 5: LoginPage
-- [ ] Step 6: MenuPage
-- [ ] Step 7: CartPage
-- [ ] Step 8: OrderPage
-- [ ] Step 9: OrderHistoryPage
-- [ ] Step 10: App.tsx + main.tsx + 글로벌 스타일
+- [x] Step 1: 프로젝트 초기화 (package.json, vite.config.ts, tsconfig.json, index.html)
+- [x] Step 2: API 클라이언트 (src/api/client.ts)
+- [x] Step 3: Hooks (src/hooks/useAuth.ts, src/hooks/useCart.ts)
+- [x] Step 4: 공통 컴포넌트 (CategoryNav, MenuCard, CartItem)
+- [x] Step 5: LoginPage
+- [x] Step 6: MenuPage
+- [x] Step 7: CartPage
+- [x] Step 8: OrderPage
+- [x] Step 9: OrderHistoryPage
+- [x] Step 10: App.tsx + main.tsx + 글로벌 스타일
 
 ---
 
