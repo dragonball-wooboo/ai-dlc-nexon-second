@@ -1,4 +1,3 @@
-import React from 'react';
 import { Menu } from '../api/client';
 
 interface Props {
@@ -9,8 +8,8 @@ interface Props {
 export function MenuCard({ menu, onAdd }: Props) {
   return (
     <div className="menu-card" data-testid={`menu-card-${menu.id}`}>
-      {menu.imageUrl && (
-        <img src={menu.imageUrl} alt={menu.name} className="menu-card-image" />
+      {menu.image_url && (
+        <img src={menu.image_url} alt={menu.name} className="menu-card-image" />
       )}
       <div className="menu-card-body">
         <h3 className="menu-card-name">{menu.name}</h3>

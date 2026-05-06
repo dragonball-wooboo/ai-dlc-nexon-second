@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api, Menu } from '../api/client';
 import { useAuth } from '../hooks/useAuth';
@@ -6,14 +6,14 @@ import { useCart } from '../hooks/useCart';
 import { CategoryNav } from '../components/CategoryNav';
 import { MenuCard } from '../components/MenuCard';
 
-interface Category {
+interface CategoryWithMenus {
   id: number;
   name: string;
   menus: Menu[];
 }
 
 export function MenuPage() {
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<CategoryWithMenus[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const { storeId } = useAuth();
@@ -25,9 +25,16 @@ export function MenuPage() {
     setLoading(true);
     api.getMenus(storeId)
       .then(data => {
-        setCategories(data.categories);
-        if (data.categories.length > 0) {
-          setSelectedCategory(data.categories[0].id);
+        // 서버 응답: { categories: [...], menus: [...] } → 카테고리별 그룹핑
+        const grouped: CategoryWithMenus[] = data.categories.map(cat => ({
+          id: cat.id,
+          name: cat.name,
+          menus: data.menus.filter(m => m.category_id === cat.id)
+            .sort((a, b) => a.sort_order - b.sort_order)
+        }));
+        setCategories(grouped);
+        if (grouped.length > 0) {
+          setSelectedCategory(grouped[0].id);
         }
       })
       .catch(console.error)

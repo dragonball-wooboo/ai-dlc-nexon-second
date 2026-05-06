@@ -11,6 +11,17 @@ function getToken(): string | null {
   }
 }
 
+function getStoreId(): string | null {
+  const stored = localStorage.getItem('admin-auth');
+  if (!stored) return null;
+  try {
+    const parsed = JSON.parse(stored);
+    return parsed.storeId ?? null;
+  } catch {
+    return null;
+  }
+}
+
 async function request<T>(
   path: string,
   options: RequestInit = {}
@@ -40,8 +51,8 @@ async function request<T>(
   }
 
   if (!response.ok) {
-    const error = await response.json().catch(() => ({ message: 'Request failed' }));
-    throw new Error(error.message || `HTTP ${response.status}`);
+    const error = await response.json().catch(() => ({ error: 'Request failed' }));
+    throw new Error(error.error || `HTTP ${response.status}`);
   }
 
   return response.json();
@@ -49,7 +60,7 @@ async function request<T>(
 
 // Auth
 export function loginAdmin(storeId: string, username: string, password: string) {
-  return request<{ token: string; expiresIn: string }>('/auth/admin/login', {
+  return request<{ token: string; expiresIn: string; store: { id: string; name: string } }>('/auth/admin/login', {
     method: 'POST',
     body: JSON.stringify({ storeId, username, password }),
   });
@@ -61,7 +72,8 @@ export function getTables() {
 }
 
 export function getTableOrders(tableId: number) {
-  return request<Order[]>(`/orders/table/${tableId}`);
+  // 서버는 { table: {...}, orders: [...] } 반환
+  return request<{ table: Table; orders: Order[] }>(`/orders/table/${tableId}`);
 }
 
 export function completeTable(tableId: number) {
@@ -75,10 +87,10 @@ export function getTableHistory(tableId: number, date?: string) {
   return request<OrderHistory[]>(`/tables/${tableId}/history${query}`);
 }
 
-// Orders
+// Orders — 서버는 PUT 메서드 사용
 export function updateOrderStatus(orderId: number, status: OrderStatus) {
-  return request<Order>(`/orders/${orderId}/status`, {
-    method: 'PATCH',
+  return request<{ orderId: number; status: OrderStatus }>(`/orders/${orderId}/status`, {
+    method: 'PUT',
     body: JSON.stringify({ status }),
   });
 }
@@ -89,13 +101,23 @@ export function deleteOrder(orderId: number) {
   });
 }
 
-// Menus
+// Menus — 서버는 storeId 쿼리 파라미터 필수
 export function getMenus() {
-  return request<Menu[]>('/menus');
+  const storeId = getStoreId();
+  return request<{ categories: Category[]; menus: Menu[] }>(`/menus?storeId=${storeId}`);
 }
 
+// Categories — 서버 엔드포인트: /api/menus/categories/list
 export function getCategories() {
-  return request<Category[]>('/categories');
+  const storeId = getStoreId();
+  return request<Category[]>(`/menus/categories/list?storeId=${storeId}`);
+}
+
+export function createCategory(name: string, sortOrder?: number) {
+  return request<Category>('/menus/categories', {
+    method: 'POST',
+    body: JSON.stringify({ name, sortOrder: sortOrder || 0 }),
+  });
 }
 
 export function createMenu(data: MenuInput) {
@@ -118,11 +140,11 @@ export function deleteMenu(id: number) {
   });
 }
 
-// Upload
+// Upload — 서버는 { imageUrl: "..." } 반환
 export function uploadImage(file: File) {
   const formData = new FormData();
   formData.append('image', file);
-  return request<{ url: string }>('/upload/image', {
+  return request<{ imageUrl: string }>('/upload/image', {
     method: 'POST',
     body: formData,
   });
@@ -133,60 +155,61 @@ export type OrderStatus = 'pending' | 'preparing' | 'completed';
 
 export interface Table {
   id: number;
-  storeId: string;
-  tableNumber: number;
-  currentSessionId: string | null;
-  createdAt: string;
+  store_id: string;
+  table_number: number;
+  current_session_id: string | null;
+  created_at: string;
+  totalAmount?: number;
 }
 
 export interface Order {
   id: number;
-  storeId: string;
-  tableId: number;
-  sessionId: string;
+  store_id: string;
+  table_id: number;
+  session_id: string;
   status: OrderStatus;
-  totalAmount: number;
-  createdAt: string;
+  total_amount: number;
+  created_at: string;
   items?: OrderItem[];
 }
 
 export interface OrderItem {
   id: number;
-  orderId: number;
-  menuId: number;
-  menuName: string;
+  order_id: number;
+  menu_id: number;
+  menu_name: string;
   quantity: number;
   price: number;
 }
 
 export interface OrderHistory {
   id: number;
-  storeId: string;
-  tableId: number;
-  tableNumber: number;
-  sessionId: string;
-  orderData: string;
-  totalAmount: number;
-  completedAt: string;
+  store_id: string;
+  table_id: number;
+  table_number: number;
+  session_id: string;
+  orderData: any;
+  total_amount: number;
+  completed_at: string;
 }
 
 export interface Category {
   id: number;
-  storeId: string;
+  store_id: string;
   name: string;
-  sortOrder: number;
+  sort_order: number;
 }
 
 export interface Menu {
   id: number;
-  storeId: string;
-  categoryId: number;
+  store_id: string;
+  category_id: number;
   name: string;
   price: number;
   description: string;
-  imageUrl: string;
-  sortOrder: number;
-  createdAt: string;
+  image_url: string;
+  sort_order: number;
+  created_at: string;
 }
 
 export interface MenuInput {

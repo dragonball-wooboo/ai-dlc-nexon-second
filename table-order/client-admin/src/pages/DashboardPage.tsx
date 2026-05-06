@@ -22,10 +22,10 @@ export function DashboardPage() {
       const ordersMap: Record<number, Order[]> = {};
       await Promise.all(
         tablesData
-          .filter((t) => t.currentSessionId)
+          .filter((t) => t.current_session_id)
           .map(async (t) => {
             try {
-              ordersMap[t.id] = await getTableOrders(t.id);
+              ordersMap[t.id] = (await getTableOrders(t.id)).orders;
             } catch {
               ordersMap[t.id] = [];
             }
@@ -56,13 +56,13 @@ export function DashboardPage() {
       const order = lastEvent.data as Order;
       setOrdersByTable((prev) => ({
         ...prev,
-        [order.tableId]: [...(prev[order.tableId] || []), order],
+        [order.table_id]: [...(prev[order.table_id] || []), order],
       }));
-      setNewOrderTableIds((prev) => new Set(prev).add(order.tableId));
+      setNewOrderTableIds((prev) => new Set(prev).add(order.table_id));
       setTimeout(() => {
         setNewOrderTableIds((prev) => {
           const next = new Set(prev);
-          next.delete(order.tableId);
+          next.delete(order.table_id);
           return next;
         });
       }, 5000);
@@ -70,7 +70,7 @@ export function DashboardPage() {
       const updated = lastEvent.data as Order;
       setOrdersByTable((prev) => ({
         ...prev,
-        [updated.tableId]: (prev[updated.tableId] || []).map((o) =>
+        [updated.table_id]: (prev[updated.table_id] || []).map((o) =>
           o.id === updated.id ? updated : o
         ),
       }));
@@ -103,7 +103,7 @@ export function DashboardPage() {
       <div className="dashboard-page__grid">
         {tables.map((table) => {
           const orders = ordersByTable[table.id] || [];
-          const totalAmount = orders.reduce((sum, o) => sum + o.totalAmount, 0);
+          const totalAmount = orders.reduce((sum, o) => sum + o.total_amount, 0);
           return (
             <TableCard
               key={table.id}

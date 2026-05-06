@@ -23,7 +23,7 @@ export function MenuManagePage() {
         getMenus(),
         getCategories(),
       ]);
-      setMenus(menusData);
+      setMenus(menusData.menus);
       setCategories(categoriesData);
     } catch {
       // handle error
@@ -73,7 +73,7 @@ export function MenuManagePage() {
   }
 
   const filteredMenus = selectedCategory
-    ? menus.filter((m) => m.categoryId === selectedCategory)
+    ? menus.filter((m) => m.category_id === selectedCategory)
     : menus;
 
   if (loading) {
@@ -132,9 +132,9 @@ export function MenuManagePage() {
             )}
             {filteredMenus.map((menu) => (
               <div key={menu.id} className="menu-manage__item">
-                {menu.imageUrl && (
+                {menu.image_url && (
                   <img
-                    src={menu.imageUrl}
+                    src={menu.image_url}
                     alt={menu.name}
                     className="menu-manage__item-image"
                   />

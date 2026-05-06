@@ -31,7 +31,7 @@ export function OrderDetail({ order, onStatusChange, onDelete }: OrderDetailProp
           {STATUS_LABEL[order.status]}
         </span>
         <span className="order-detail__time">
-          {new Date(order.createdAt).toLocaleTimeString('ko-KR', {
+          {new Date(order.created_at).toLocaleTimeString('ko-KR', {
             hour: '2-digit',
             minute: '2-digit',
           })}
@@ -42,7 +42,7 @@ export function OrderDetail({ order, onStatusChange, onDelete }: OrderDetailProp
         <ul className="order-detail__items">
           {order.items.map((item) => (
             <li key={item.id} className="order-detail__item">
-              <span className="order-detail__item-name">{item.menuName}</span>
+              <span className="order-detail__item-name">{item.menu_name}</span>
               <span className="order-detail__item-qty">x{item.quantity}</span>
               <span className="order-detail__item-price">
                 {(item.price * item.quantity).toLocaleString()}원
@@ -53,7 +53,7 @@ export function OrderDetail({ order, onStatusChange, onDelete }: OrderDetailProp
       )}
 
       <div className="order-detail__total">
-        합계: {order.totalAmount.toLocaleString()}원
+        합계: {order.total_amount.toLocaleString()}원
       </div>
 
       <div className="order-detail__actions">

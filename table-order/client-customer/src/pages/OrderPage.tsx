@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../api/client';
 import { useAuth } from '../hooks/useAuth';
@@ -6,7 +6,7 @@ import { useCart } from '../hooks/useCart';
 
 export function OrderPage() {
   const { items, totalAmount, clearCart } = useCart();
-  const { storeId, tableId, sessionId } = useAuth();
+  const { storeId, tableId } = useAuth();
   const navigate = useNavigate();
   const [orderResult, setOrderResult] = useState<{ id: number } | null>(null);
   const [error, setError] = useState('');
@@ -28,24 +28,21 @@ export function OrderPage() {
   }, [orderResult, navigate]);
 
   const handleConfirm = async () => {
-    if (!storeId || !tableId || !sessionId) return;
+    if (!storeId || !tableId) return;
     setLoading(true);
     setError('');
 
     try {
-      const result = await api.createOrder({
-        storeId,
-        tableId,
-        sessionId,
-        items: items.map(item => ({
+      // 서버는 JWT 토큰에서 storeId, tableId, sessionId 추출. body에는 items만 전송
+      const result = await api.createOrder(
+        items.map(item => ({
           menuId: item.menuId,
           menuName: item.name,
           quantity: item.quantity,
           price: item.price,
-        })),
-        totalAmount,
-      });
-      setOrderResult({ id: result.order.id });
+        }))
+      );
+      setOrderResult({ id: result.id });
       clearCart();
     } catch (err) {
       setError(err instanceof Error ? err.message : '주문에 실패했습니다.');

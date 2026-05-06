@@ -24,7 +24,7 @@ export function TableDetailPage() {
   const fetchOrders = useCallback(async () => {
     try {
       const data = await getTableOrders(tableId);
-      setOrders(data);
+      setOrders(data.orders);
     } catch {
       // handle error
     } finally {
@@ -38,8 +38,8 @@ export function TableDetailPage() {
 
   async function handleStatusChange(orderId: number, status: OrderStatus) {
     try {
-      const updated = await updateOrderStatus(orderId, status);
-      setOrders((prev) => prev.map((o) => (o.id === orderId ? updated : o)));
+      await updateOrderStatus(orderId, status);
+      setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status } : o)));
     } catch {
       alert('상태 변경에 실패했습니다.');
     }
@@ -82,7 +82,7 @@ export function TableDetailPage() {
     }
   }
 
-  const totalAmount = orders.reduce((sum, o) => sum + o.totalAmount, 0);
+  const totalAmount = orders.reduce((sum, o) => sum + o.total_amount, 0);
 
   if (loading) {
     return <div className="table-detail__loading">로딩 중...</div>;
@@ -140,10 +140,10 @@ export function TableDetailPage() {
               {history.map((h) => (
                 <li key={h.id} className="table-detail__history-item">
                   <span className="table-detail__history-date">
-                    {new Date(h.completedAt).toLocaleString('ko-KR')}
+                    {new Date(h.completed_at).toLocaleString('ko-KR')}
                   </span>
                   <span className="table-detail__history-amount">
-                    {h.totalAmount.toLocaleString()}원
+                    {h.total_amount.toLocaleString()}원
                   </span>
                 </li>
               ))}

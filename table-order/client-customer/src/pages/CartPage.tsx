@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../hooks/useCart';
 import { CartItemComponent } from '../components/CartItem';

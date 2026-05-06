@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { CartItem as CartItemType } from '../hooks/useCart';
 
 interface Props {

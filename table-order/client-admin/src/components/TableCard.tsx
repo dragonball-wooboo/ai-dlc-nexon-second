@@ -17,7 +17,7 @@ export function TableCard({ table, orders, totalAmount, hasNewOrder }: TableCard
   return (
     <div
       className={`table-card ${hasNewOrder ? 'table-card--highlight' : ''} ${
-        table.currentSessionId ? 'table-card--active' : 'table-card--empty'
+        table.current_session_id ? 'table-card--active' : 'table-card--empty'
       }`}
       onClick={() => navigate(`/tables/${table.id}`)}
       role="button"
@@ -25,16 +25,16 @@ export function TableCard({ table, orders, totalAmount, hasNewOrder }: TableCard
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') navigate(`/tables/${table.id}`);
       }}
-      aria-label={`테이블 ${table.tableNumber} 상세 보기`}
+      aria-label={`테이블 ${table.table_number} 상세 보기`}
     >
       <div className="table-card__header">
-        <span className="table-card__number">테이블 {table.tableNumber}</span>
+        <span className="table-card__number">테이블 {table.table_number}</span>
         {pendingCount > 0 && (
           <span className="table-card__badge">{pendingCount}</span>
         )}
       </div>
 
-      {table.currentSessionId ? (
+      {table.current_session_id ? (
         <>
           <div className="table-card__amount">
             {totalAmount.toLocaleString()}원
@@ -48,7 +48,7 @@ export function TableCard({ table, orders, totalAmount, hasNewOrder }: TableCard
                   {order.status === 'completed' && '완료'}
                 </span>
                 <span className="table-card__order-amount">
-                  {order.totalAmount.toLocaleString()}원
+                  {order.total_amount.toLocaleString()}원
                 </span>
               </li>
             ))}

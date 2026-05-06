@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { api, Order } from '../api/client';
 import { useAuth } from '../hooks/useAuth';
 
@@ -11,7 +11,7 @@ export function OrderHistoryPage() {
     if (!sessionId) return;
     setLoading(true);
     api.getOrders(sessionId)
-      .then(data => setOrders(data.orders))
+      .then(data => setOrders(data))
       .catch(console.error)
       .finally(() => setLoading(false));
   }, [sessionId]);
@@ -49,17 +49,17 @@ export function OrderHistoryPage() {
               <span className={statusClass(order.status)}>{statusLabel(order.status)}</span>
             </div>
             <div className="order-time">
-              {new Date(order.createdAt).toLocaleTimeString('ko-KR')}
+              {new Date(order.created_at).toLocaleTimeString('ko-KR')}
             </div>
             {order.items && (
               <div className="order-menu-list">
                 {order.items.map((item, idx) => (
-                  <span key={idx}>{item.menuName} x{item.quantity}</span>
+                  <span key={idx}>{item.menu_name} x{item.quantity}</span>
                 ))}
               </div>
             )}
             <div className="order-amount">
-              {order.totalAmount.toLocaleString()}원
+              {order.total_amount.toLocaleString()}원
             </div>
           </div>
         ))}

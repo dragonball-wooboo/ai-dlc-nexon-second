@@ -23,8 +23,8 @@ export function MenuForm({ menu, categories, onSubmit, onCancel }: MenuFormProps
       setName(menu.name);
       setPrice(String(menu.price));
       setDescription(menu.description);
-      setCategoryId(menu.categoryId);
-      setImageUrl(menu.imageUrl);
+      setCategoryId(menu.category_id);
+      setImageUrl(menu.image_url);
     }
   }, [menu]);
 
@@ -45,7 +45,7 @@ export function MenuForm({ menu, categories, onSubmit, onCancel }: MenuFormProps
     }
 
     if (!categoryId) {
-      newErrors.categoryId = '카테고리를 선택해주세요.';
+      newErrors.category_id = '카테고리를 선택해주세요.';
     }
 
     setErrors(newErrors);
@@ -70,7 +70,7 @@ export function MenuForm({ menu, categories, onSubmit, onCancel }: MenuFormProps
     setUploading(true);
     try {
       const result = await uploadImage(file);
-      setImageUrl(result.url);
+      setImageUrl(result.imageUrl);
       setErrors((prev) => {
         const next = { ...prev };
         delete next.image;
@@ -154,7 +154,7 @@ export function MenuForm({ menu, categories, onSubmit, onCancel }: MenuFormProps
             </option>
           ))}
         </select>
-        {errors.categoryId && <span className="menu-form__error">{errors.categoryId}</span>}
+        {errors.category_id && <span className="menu-form__error">{errors.category_id}</span>}
       </div>
 
       <div className="menu-form__field">
